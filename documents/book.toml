@@ -1,0 +1,6 @@
+[book]
+authors = ["teteteo619"]
+language = "ja"
+multilingual = false
+src = "src"
+title = "finflow"

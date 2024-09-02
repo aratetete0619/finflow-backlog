@@ -1,0 +1,648 @@
+openapi: 3.0.0
+info:
+  title: FinFlow API
+  version: 1.0.0
+  description: FinFlow 金融管理アプリケーションの API 仕様
+
+servers:
+  - url: https://api.finflow.com/v1
+
+paths:
+  /users:
+    post:
+      summary: 新規ユーザー登録
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '201':
+          description: ユーザーが正常に登録されました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /users/{userId}:
+    get:
+      summary: ユーザー情報の取得
+      tags:
+        - Users
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: ユーザー情報
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /accounts:
+    get:
+      summary: ユーザーのアカウント一覧取得
+      tags:
+        - Accounts
+      responses:
+        '200':
+          description: アカウント一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+    post:
+      summary: 新規アカウント作成
+      tags:
+        - Accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountCreation'
+      responses:
+        '201':
+          description: アカウントが正常に作成されました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /transactions:
+    get:
+      summary: 取引履歴の取得
+      tags:
+        - Transactions
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: account
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 取引履歴
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+    post:
+      summary: 新規取引の記録
+      tags:
+        - Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCreation'
+      responses:
+        '201':
+          description: 取引が正常に記録されました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /budgets:
+    get:
+      summary: 予算一覧の取得
+      tags:
+        - Budgets
+      responses:
+        '200':
+          description: 予算一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Budget'
+    post:
+      summary: 新規予算の設定
+      tags:
+        - Budgets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BudgetCreation'
+      responses:
+        '201':
+          description: 予算が正常に設定されました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Budget'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /goals:
+    get:
+      summary: 財務目標の一覧取得
+      tags:
+        - Goals
+      responses:
+        '200':
+          description: 財務目標一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FinancialGoal'
+    post:
+      summary: 新規財務目標の設定
+      tags:
+        - Goals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinancialGoalCreation'
+      responses:
+        '201':
+          description: 財務目標が正常に設定されました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinancialGoal'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /investments:
+    get:
+      summary: 投資一覧の取得
+      tags:
+        - Investments
+      responses:
+        '200':
+          description: 投資一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Investment'
+    post:
+      summary: 新規投資の記録
+      tags:
+        - Investments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvestmentCreation'
+      responses:
+        '201':
+          description: 投資が正常に記録されました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Investment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /reports:
+    get:
+      summary: レポート一覧の取得
+      tags:
+        - Reports
+      responses:
+        '200':
+          description: レポート一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+    post:
+      summary: 新規レポートの生成
+      tags:
+        - Reports
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportCreation'
+      responses:
+        '201':
+          description: レポートが正常に生成されました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /notifications:
+    get:
+      summary: 通知一覧の取得
+      tags:
+        - Notifications
+      responses:
+        '200':
+          description: 通知一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+    post:
+      summary: 新規通知の作成
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationCreation'
+      responses:
+        '201':
+          description: 通知が正常に作成されました
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    BadRequest:
+      description: リクエストが不正です
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: リソースが見つかりません
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    UserRegistration:
+      type: object
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        firstName:
+          type: string
+        lastName:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    AccountCreation:
+      type: object
+      required:
+        - name
+        - type
+        - balance
+        - currency
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [checking, savings, credit_card, investment]
+        balance:
+          type: number
+          format: float
+        currency:
+          type: string
+
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+        balance:
+          type: number
+          format: float
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    TransactionCreation:
+      type: object
+      required:
+        - accountId
+        - amount
+        - categoryId
+        - date
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        categoryId:
+          type: string
+          format: uuid
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        categoryId:
+          type: string
+          format: uuid
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+
+    BudgetCreation:
+      type: object
+      required:
+        - categoryId
+        - amount
+        - startDate
+        - endDate
+      properties:
+        categoryId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+
+    Budget:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        categoryId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+
+    FinancialGoalCreation:
+      type: object
+      required:
+        - name
+        - targetAmount
+        - deadline
+      properties:
+        name:
+          type: string
+        targetAmount:
+          type: number
+          format: float
+        deadline:
+          type: string
+          format: date
+
+    FinancialGoal:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        targetAmount:
+          type: number
+          format: float
+        currentAmount:
+          type: number
+          format: float
+        deadline:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+
+    InvestmentCreation:
+      type: object
+      required:
+        - name
+        - type
+        - amount
+        - purchaseDate
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [stock, bond, mutual_fund, real_estate, cryptocurrency]
+        amount:
+          type: number
+          format: float
+        purchaseDate:
+          type: string
+          format: date
+
+    Investment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+        amount:
+          type: number
+          format: float
+        purchaseDate:
+          type: string
+          format: date
+        currentValue:
+          type: number
+          format: float
+        createdAt:
+          type: string
+          format: date-time
+
+    ReportCreation:
+      type: object
+      required:
+        - type
+        - startDate
+        - endDate
+      properties:
+        type:
+          type: string
+          enum: [monthly, annual, custom]
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+
+    Report:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        content:
+          type: string
+        generatedAt:
+          type: string
+          format: date-time
+
+    NotificationCreation:
+      type: object
+      required:
+        - type
+        - message
+      properties:
+        type:
+          type: string
+          enum: [system, budget_alert, goal_achievement, custom]
+        message:
+          type: string
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        message:
+          type: string
+        isRead:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+
+security:
+  - BearerAuth: []
