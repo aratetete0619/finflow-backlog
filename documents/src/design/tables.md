@@ -111,6 +111,9 @@
 
 
 # ER図
+
+https://www.mermaidchart.com/app/projects/2e95e2c5-5671-4636-96a4-88ce0d013ec8/diagrams/b501aed8-e7f2-4f14-9892-c8340033d624/version/v0.1/edit
+
 ```mermaid
 erDiagram
     USERS ||--o{ ACCOUNTS : has
